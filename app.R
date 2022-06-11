@@ -47,8 +47,12 @@ server <- function(input, output, session) {
   # removing stopwords  
   tweets_tokens <- reactive({anti_join(tweets_words(), get_stopwords(source = "smart"))})
   
+  custom_stopwords <- as.data.frame(c("im", "ive")) %>% setNames("word")
+  tweets_tokens_cleaned <- reactive({anti_join(tweets_tokens(), custom_stopwords)})
+  
+  
   # summarising words and calculating counts
-  tweets_wordcloud <- reactive({count(tweets_tokens(), word, sort = TRUE)})
+  tweets_wordcloud <- reactive({count(tweets_tokens_cleaned(), word, sort = TRUE)})
   
   # wordcloud script
   output$wordcloud <- renderPlot(wordcloud(words = tweets_wordcloud()$word, freq = tweets_wordcloud()$n,
