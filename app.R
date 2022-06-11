@@ -11,7 +11,7 @@ ui <- fluidPage(
   titlePanel("WOKECLOUD GENERATOR"),
   
   # twitter handle input
-  textInput("handle", "Twitter Handle?", placeholder = "e.g. charlesmurray"),
+  textInput("handle", "Twitter Handle HERE?", placeholder = "e.g. charlesmurray"),
   
   # wordcloud
   plotOutput("wordcloud", width = "1000px", height = "700px"),
