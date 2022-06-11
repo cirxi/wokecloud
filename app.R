@@ -45,7 +45,7 @@ server <- function(input, output, session) {
                   word, text)})
   
   # removing stopwords  
-  tweets_tokens <- reactive({anti_join(tweets_words(), get_stopwords())})
+  tweets_tokens <- reactive({anti_join(tweets_words(), get_stopwords(source = "smart"))})
   
   # summarising words and calculating counts
   tweets_wordcloud <- reactive({count(tweets_tokens(), word, sort = TRUE)})
