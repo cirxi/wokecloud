@@ -44,7 +44,7 @@ server <- function(input, output, session) {
     unnest_tokens(as.data.frame(tweets()), 
                   word, text)})
   
-  # removing stopwords
+  # removing stopwords (with lexicon and with a custom list)
   custom_stopwords <- as.data.frame(c("im", "ive", "dont", "youre", "lol", "lmao")) %>%
     setNames("word")
   tweets_tokens <- reactive({anti_join(tweets_words(), get_stopwords(source = "smart")) %>% 
