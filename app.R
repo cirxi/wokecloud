@@ -31,6 +31,7 @@ body <- dashboardBody(
             box(
               title = "Wordcloud",
               status = "primary",
+              solidHeader = TRUE,
               plotOutput("wordcloud"))),
           
           # generate button
@@ -48,7 +49,7 @@ server <- function(input, output, session) {
     })
   
   # custom stopwords for scrubbing
-  custom_stopwords <- as.data.frame(c("im", "ive", "dont", "youre", "lol", "lmao")) %>%
+  custom_stopwords <- as.data.frame(c("im", "ive", "dont", "youre", "lol", "lmao", "lot", "lots")) %>%
     setNames("word")
   
   # scrubbing tweets for wordcloud when generate button is pressed
