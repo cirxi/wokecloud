@@ -63,9 +63,9 @@ server <- function(input, output, session) {
       gsub(pattern = "[\r\n]", replacement = "") %>% 
       gsub(pattern = "[[:punct:]]", replacement = "")) %>% 
     setNames("text") %>% 
-      unnest_tokens(word, text) %>% # breaking down tweets into tokens
-      anti_join(get_stopwords(source = "smart")) %>% 
-      anti_join(custom_stopwords) %>% 
+      unnest_tokens(word, text) %>% # breaking down tweets into tokens (single words)
+      anti_join(get_stopwords(source = "smart")) %>% # removing lexicon stop words
+      anti_join(custom_stopwords) %>% # removing custom stop words
       count(word, sort = TRUE)
   })
   
