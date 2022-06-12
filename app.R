@@ -71,9 +71,12 @@ server <- function(input, output, session) {
   })
   
   # wordcloud script
-  output$wordcloud <- renderPlot(wordcloud(words = tweets_wordcloud()$word, freq = tweets_wordcloud()$n,
+  output$wordcloud <- renderPlot({
+    req(input$grab, input$generate)
+    wordcloud(words = tweets_wordcloud()$word, freq = tweets_wordcloud()$n,
                                            min.freq = 10, max.words = 50, colors = brewer.pal(8, "Dark2"),
-                                           scale = c(3, 0.5)))
+                                           scale = c(3, 0.5))
+    })
   
 }
 
