@@ -52,12 +52,11 @@ server <- function(input, output, session) {
     setNames("word")
   
   # scrubbing tweets for wordcloud when generate button is pressed
-  # gsub cleaning code from https://towardsdatascience.com/create-a-word-cloud-with-r-bde3e7422e8a
   tweets_wordcloud <- eventReactive(input$generate, {
     as.data.frame(tweets() %>%
-      filter(is_retweet == FALSE) %>% 
+      filter(is_retweet == FALSE) %>% # removing retweets
       select(text) %>%
-      gsub(pattern = "https\\S*", replacement = "") %>%
+      gsub(pattern = "https\\S*", replacement = "") %>% # gsub cleaning code from https://towardsdatascience.com/create-a-word-cloud-with-r-bde3e7422e8a
       gsub(pattern = "[^\x01-\x7F]", replacement = "") %>% 
       gsub(pattern = "@\\S*", replacement = "") %>% 
       gsub(pattern = "amp", replacement = "") %>% 
