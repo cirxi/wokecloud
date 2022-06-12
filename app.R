@@ -38,7 +38,7 @@ body <- dashboardBody(
           actionButton("generate", "Generate", class = "btn-success btn-block")),
   )
 
-ui <- dashboardPage(header, sidebar, body)
+ui <- dashboardPage(header, sidebar, body, skin = "black")
 
 # Server
 server <- function(input, output, session) {
@@ -72,6 +72,7 @@ server <- function(input, output, session) {
       count(word, sort = TRUE)
   })
   
+  # adding notification to inform user that plots are generating
   observeEvent(input$generate, {
     req(input$handle, input$grab)
     showNotification("Generating...", duration = NULL, closeButton = FALSE, id = "notification_plot", type = "warning")
@@ -85,7 +86,7 @@ server <- function(input, output, session) {
               rot.per = 0, random.color = FALSE,
               colors = brewer.pal(8, "Dark2"),
               scale = c(3, 0.5))
-    removeNotification("notification_plot")
+    removeNotification("notification_plot") #removing notification after plotting
     })
   
 }
