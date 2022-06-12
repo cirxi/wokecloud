@@ -45,6 +45,7 @@ server <- function(input, output, session) {
   
   # tweets will only pulled when grab button is clicked
   tweets <- eventReactive(input$grab, {
+    req(input$handle)
     get_timeline(input$handle, n = 500)
     })
   
@@ -72,7 +73,7 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$generate, {
-    req(input$grab)
+    req(input$handle, input$grab)
     showNotification("Generating...", duration = NULL, closeButton = FALSE, id = "notification_plot", type = "warning")
   })
   
