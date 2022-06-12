@@ -27,11 +27,11 @@ body <- dashboardBody(
   
   tabItem(tabName = "page_wordcloud",
           
-          # Application title
-          titlePanel("WOKECLOUD GENERATOR"),
-        
-          # wordcloud
-          plotOutput("wordcloud", width = "700px", height = "700px"),
+          fluidRow(
+            box(
+              title = "Wordcloud",
+              status = "primary",
+              plotOutput("wordcloud"))),
           
           # generate button
           actionButton("generate", "Generate", class = "btn-success btn-block")),
@@ -72,7 +72,7 @@ server <- function(input, output, session) {
   # wordcloud script
   output$wordcloud <- renderPlot(wordcloud(words = tweets_wordcloud()$word, freq = tweets_wordcloud()$n,
                                            min.freq = 10, max.words = 100, colors = brewer.pal(8, "Dark2"),
-                                           scale = c(4, 0.5)))
+                                           scale = c(3, 0.5)))
   
 }
 
