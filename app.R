@@ -13,6 +13,10 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     # twitter handle input
     textInput("handle", "Twitter Handle HERE?", placeholder = "e.g. charlesmurray"),
+    
+    # button to pull twitter data
+    actionButton("pull", "Grab Data", class = "btn-success"),
+    
     menuItem("Wokecloud", tabName = "page_wordcloud", icon = icon("cloud")),
     menuItem("Github Repo", icon = icon("github"), href = "https://github.com/cirxi/wokecloud")
     )
@@ -30,7 +34,7 @@ body <- dashboardBody(
           plotOutput("wordcloud", width = "700px", height = "700px"),
           
           # generate button
-          actionButton("execute", "Generate", class = "btn-success btn-block")),
+          actionButton("generate", "Generate", class = "btn-success btn-block")),
   )
 
 ui <- dashboardPage(header, sidebar, body)
@@ -38,24 +42,29 @@ ui <- dashboardPage(header, sidebar, body)
 # Server
 server <- function(input, output, session) {
   
-  # tweets will only pulled and scrubbed when execute button is clicked
+  # tweets will only pulled when execute button is clicked
   # gsub cleaning code from https://towardsdatascience.com/create-a-word-cloud-with-r-bde3e7422e8a
-  tweets <- eventReactive(input$execute, {
-    as.data.frame(get_timeline(input$handle, n = 1000) %>%
-                    filter(is_retweet == FALSE) %>% 
-                    select(text) %>%
-                    gsub(pattern = "https\\S*", replacement = "") %>%
-                    gsub(pattern = "[^\x01-\x7F]", replacement = "") %>% 
-                    gsub(pattern = "@\\S*", replacement = "") %>% 
-                    gsub(pattern = "amp", replacement = "") %>% 
-                    gsub(pattern = "[\r\n]", replacement = "") %>% 
-                    gsub(pattern = "[[:punct:]]", replacement = "")) %>% 
-      setNames("text")
+  tweets <- eventReactive(input$pull, {
+    get_timeline(input$handle, n = 500)
+    })
+  
+  # scrubbing tweets for wordcloud
+  tweets_scrubbed <- eventReactive(input$generate, {
+    as.data.frame(tweets() %>%
+      filter(is_retweet == FALSE) %>% 
+      select(text) %>%
+      gsub(pattern = "https\\S*", replacement = "") %>%
+      gsub(pattern = "[^\x01-\x7F]", replacement = "") %>% 
+      gsub(pattern = "@\\S*", replacement = "") %>% 
+      gsub(pattern = "amp", replacement = "") %>% 
+      gsub(pattern = "[\r\n]", replacement = "") %>% 
+      gsub(pattern = "[[:punct:]]", replacement = "")) %>% 
+    setNames("text")
   })
   
   # splitting chunk of tweets into tokens
   tweets_words <- reactive({
-    unnest_tokens(as.data.frame(tweets()), 
+    unnest_tokens(as.data.frame(tweets_scrubbed()), 
                   word, text)})
   
   # removing stopwords (with lexicon and with a custom list)
