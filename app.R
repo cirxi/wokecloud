@@ -11,6 +11,8 @@ header <- dashboardHeader(title = "Project WOKECLOUD")
 # UI sidebar
 sidebar <- dashboardSidebar(
   sidebarMenu(
+    # twitter handle input
+    textInput("handle", "Twitter Handle HERE?", placeholder = "e.g. charlesmurray"),
     menuItem("Wokecloud", tabName = "page_wordcloud", icon = icon("cloud")),
     menuItem("Github Repo", icon = icon("github"), href = "https://github.com/cirxi/wokecloud")
     )
@@ -20,12 +22,13 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   
   tabItem(tabName = "page_wordcloud",
+          
           # Application title
           titlePanel("WOKECLOUD GENERATOR"),
-          # twitter handle input
-          textInput("handle", "Twitter Handle HERE?", placeholder = "e.g. charlesmurray"),
+        
           # wordcloud
           plotOutput("wordcloud", width = "700px", height = "700px"),
+          
           # generate button
           actionButton("execute", "Generate", class = "btn-success btn-block")),
   )
