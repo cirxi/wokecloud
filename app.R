@@ -54,6 +54,7 @@ server <- function(input, output, session) {
   
   # scrubbing tweets for wordcloud when generate button is pressed
   tweets_wordcloud <- eventReactive(input$generate, {
+    req(input$grab)
     as.data.frame(tweets() %>%
       filter(is_retweet == FALSE) %>% # removing retweets
       select(text) %>%
@@ -71,15 +72,18 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$generate, {
-    showNotification("Generating...", duration = NULL, closeButton = FALSE, id = "notification_plot", type = "message")
+    req(input$grab)
+    showNotification("Generating...", duration = NULL, closeButton = FALSE, id = "notification_plot", type = "warning")
   })
   
   # wordcloud script
   output$wordcloud <- renderPlot({
     req(input$grab, input$generate)
     wordcloud(words = tweets_wordcloud()$word, freq = tweets_wordcloud()$n,
-                                           min.freq = 10, max.words = 50, colors = brewer.pal(8, "Dark2"),
-                                           scale = c(3, 0.5))
+              min.freq = 10, max.words = 50,
+              rot.per = 0, random.color = FALSE,
+              colors = brewer.pal(8, "Dark2"),
+              scale = c(3, 0.5))
     removeNotification("notification_plot")
     })
   
