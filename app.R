@@ -1,24 +1,27 @@
 library(shiny)
+library(shinydashboard)
 library(rtweet)
 library(tidyverse)
 library(wordcloud)
 library(tidytext)
 
 # UI
-ui <- fluidPage(
+ui <- dashboardPage(
+  dashboardHeader(),
+  dashboardSidebar(),
+  dashboardBody(
+    
+    # Application title
+    titlePanel("WOKECLOUD GENERATOR"),
+    
+    # twitter handle input
+    textInput("handle", "Twitter Handle HERE?", placeholder = "e.g. charlesmurray"),
+    
+    # wordcloud
+    plotOutput("wordcloud", width = "700px", height = "700px"),
   
-  # Application title
-  titlePanel("WOKECLOUD GENERATOR"),
-  
-  # twitter handle input
-  textInput("handle", "Twitter Handle HERE?", placeholder = "e.g. charlesmurray"),
-  
-  # wordcloud
-  plotOutput("wordcloud", width = "1000px", height = "700px"),
-  
-  # generate button
-  actionButton("execute", "Generate", class = "btn-block")
-  
+    # generate button
+    actionButton("execute", "Generate", class = "btn-success btn-block"))
 )
 
 # Server
